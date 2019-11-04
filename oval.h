@@ -21,9 +21,9 @@ public:
     Oval(QPoint center,int a, int b);
     ~Oval();
     void draw(QPen& pen, QPixmap& pix) override;
-    void translate(int dx, int dy);
-    void rotate(int x, int y, int r);
-    void scale(int x, int y, float s);
+    void translate(int dx, int dy) override;
+    void rotate(int x, int y, int r) override;
+    void scale(int x, int y, float s) override;
 
 };
 

@@ -13,19 +13,6 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QPushButton" name="Test">
-   <property name="geometry">
-    <rect>
-     <x>1040</x>
-     <y>20</y>
-     <width>75</width>
-     <height>23</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Test</string>
-   </property>
-  </widget>
   <widget class="QPushButton" name="Save">
    <property name="geometry">
     <rect>
@@ -76,6 +63,32 @@
    </property>
    <property name="text">
     <string>Color</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="Input">
+   <property name="geometry">
+    <rect>
+     <x>1040</x>
+     <y>220</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Input</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="Transform">
+   <property name="geometry">
+    <rect>
+     <x>1040</x>
+     <y>260</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Transform</string>
    </property>
   </widget>
  </widget>

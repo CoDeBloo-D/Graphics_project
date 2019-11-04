@@ -2,10 +2,13 @@
 
 Polygon::Polygon() {
     type = POLYGON;
+    drawMethod = 0;
+    //0 for DDA, 1 for Bresenham
 }
 
 Polygon::Polygon(QVector<QPoint> v) {
     type = POLYGON;
+    drawMethod = 0;
     for(int i = 0; i < v.size(); i++)
         points.push_back(v[i]);
 }

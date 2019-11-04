@@ -22,6 +22,8 @@ void Line::setDrawMethod(int m) {
 }
 
 void Line::draw(QPen& pen, QPixmap& pix) {
+    if(startPoint == endPoint)
+        return;
     double deltaX = startPoint.x() - endPoint.x();
     double deltaY = startPoint.y() - endPoint.y();
     double k;
@@ -38,13 +40,12 @@ void Line::draw(QPen& pen, QPixmap& pix) {
             length = fabs(deltaX);
         double stepX = deltaX / length;
         double stepY = deltaY / length;
-        int x = endPoint.x(), y = endPoint.y();
-
+        double x = endPoint.x(), y = endPoint.y();
         set_Pixel(x, y, pen, pix);
         for(int i = 1; i <= length; i++) {
             x += stepX;
             y += stepY;
-            set_Pixel((int)(x + 0.5), (int)(y + 0.5), pen, pix);
+            set_Pixel(x, y, pen, pix);
         }
     }
     else {
@@ -170,6 +171,12 @@ void Line::set_Pixel(int x, int y, QPen& pen, QPixmap& pix) {
     painter.drawPoint(x,y);
 }
 
+void Line::set_Pixel(double x, double y, QPen& pen, QPixmap& pix) {
+    QPainter painter(&pix);
+    painter.setPen(pen);
+    painter.drawPoint(QPointF(x, y));
+}
+
 Line::~Line() {
     startPoint.setX(0);
     startPoint.setY(0);
@@ -200,11 +207,233 @@ void Line::scale(int x, int y, float s) {
     midPoint.setY((startPoint.y() + endPoint.y()) / 2);
 }
 
-void Line::clip(int x1, int y1, int x2, int y2, std::string algorithm) {
-    if(algorithm == "1") {
+int getAreaCode(int x, int y, int xmin, int xmax, int ymin, int ymax) {
+    int areaCode = 0;
+    if(x < xmin)
+        areaCode |= 1;
+    if(x>xmax)
+        areaCode |= 2;
+    if(y<ymin)
+        areaCode |= 4;
+    if(y>ymax)
+        areaCode |= 8;
+
+    return areaCode;
+}
+
+bool judgeAreaCode(int areaCode1, int areaCode2) {
+    bool isDone = false;
+    if(areaCode1 == 0 && areaCode2== 0)
+        isDone = true;
+    if((areaCode1&areaCode2) != 0)
+        isDone = true;
+    return isDone;
+}
+
+bool ClipT(int p, int q, double *u1, double *u2) {
+    double r;
+    if (p < 0.0) {
+        r = q / p;
+        if (r > *u2)
+            return false;
+        if (r > *u1)
+            *u1 = r;
+    }
+    else if (p > 0.0) {
+        r = q / p;
+        if (r < *u1)
+            return false;
+        if (r < *u2)
+            *u2 = r;
+    }
+    else
+        return q >= 0;
+    return true;
+}
+
+
+void Line::clip(QPoint point1, QPoint point2, std::string algorithm) {
+    int xmin, xmax, ymin, ymax;
+
+    if(point1.x()>point2.x()) {
+        xmin = point2.x();
+        xmax = point1.x();
+    }
+    else {
+        xmin = point1.x();
+        xmax = point2.x();
+    }
+    if(point1.y()>point2.y()) {
+        ymin = point2.y();
+        ymax = point1.y();
+    }
+    else {
+        ymin = point1.y();
+        ymax = point2.y();
+    }
+    int x1 = startPoint.x(), y1 = startPoint.y();
+    int x2 = endPoint.x(), y2 = endPoint.y();
+
+    if(algorithm == "Cohen-Sutherland") {
+        int areaCode1 = getAreaCode(x1, y1, xmin, xmax, ymin, ymax);
+        int areaCode2 = getAreaCode(x2, y2, xmin, xmax, ymin, ymax);
+
+        if((areaCode1 & areaCode2) != 0)
+            return;
+        if(areaCode1 == 0 && areaCode2 == 0) {
+            endPoint = startPoint; //means the line is fully cut
+            return;
+        }
+
+        int flag1 = areaCode1 & 1, flag2 = areaCode2 & 1;
+        int a = y2 - y1, b= x1 - x2, c = x2 * y1 - x1 * y2;
+
+        //left cutting
+        if(flag1 == 1) {
+            x1 = xmin;
+            y1 = (-c - a * x1) / b;
+            areaCode1 = getAreaCode(x1, y1, xmin, xmax, ymin, ymax);
+            bool isDone = judgeAreaCode(areaCode1, areaCode2);
+            if(isDone) {
+                startPoint.setX(x1);
+                startPoint.setY(y1);
+                endPoint.setX(x2);
+                endPoint.setY(y2);
+                return;
+            }
+        }
+
+        if(flag2 == 1) {
+            x2 = xmin;
+            y2 = (-c - a * x2) / b;
+            areaCode2 = getAreaCode(x2, y2, xmin, xmax, ymin, ymax);
+            bool isDone = judgeAreaCode(areaCode1, areaCode2);
+            if(isDone) {
+                startPoint.setX(x1);
+                startPoint.setY(y1);
+                endPoint.setX(x2);
+                endPoint.setY(y2);
+                return;
+            }
+        }
+
+        flag1 = (areaCode1 & 2) / 2;
+        flag2 = (areaCode2 & 2) / 2;
+        //right cutting
+        if(flag1 == 1) {
+            x1 = xmax;
+            y1 = (-c - a * x1) / b;
+            areaCode1 = getAreaCode(x1, y1, xmin, xmax, ymin, ymax);
+            bool isDone = judgeAreaCode(areaCode1, areaCode2);
+            if(isDone) {
+                startPoint.setX(x1);
+                startPoint.setY(y1);
+                endPoint.setX(x2);
+                endPoint.setY(y2);
+                return;
+            }
+        }
+
+        if(flag2 == 1) {
+            x2 = xmax;
+            y2 = (-c - a * x2) / b;
+            areaCode2 = getAreaCode(x2, y2, xmin, xmax, ymin, ymax);
+            bool isDone = judgeAreaCode(areaCode1, areaCode2);
+            if(isDone) {
+                startPoint.setX(x1);
+                startPoint.setY(y1);
+                endPoint.setX(x2);
+                endPoint.setY(y2);
+                return;
+            }
+        }
+
+        flag1 = (areaCode1 & 4) / 4;
+        flag2 = (areaCode2 & 4) / 4;
+        //top cutting
+        if(flag1 == 1) {
+            y1 = ymin;
+            x1 = (-c - b * y1) / a;
+            areaCode1 = getAreaCode(x1, y1, xmin, xmax, ymin, ymax);
+            bool isDone = judgeAreaCode(areaCode1, areaCode2);
+            if(isDone) {
+                startPoint.setX(x1);
+                startPoint.setY(y1);
+                endPoint.setX(x2);
+                endPoint.setY(y2);
+                return;
+            }
+        }
+
+        if(flag2 == 1) {
+            y2 = ymin;
+            x2 = (-c - b * y2) / a;
+            areaCode2 = getAreaCode(x2, y2, xmin, xmax, ymin, ymax);
+            bool isDone = judgeAreaCode(areaCode1, areaCode2);
+            if(isDone) {
+                startPoint.setX(x1);
+                startPoint.setY(y1);
+                endPoint.setX(x2);
+                endPoint.setY(y2);
+                return;
+            }
+        }
+
+        flag1 = (areaCode1 & 8) / 8;
+        flag2 = (areaCode2 & 8) / 8;
+        //bottom cutting
+        if(flag1 == 1) {
+            y1 = ymax;
+            x1 = (-c - b * y1) / a;
+            areaCode1 = getAreaCode(x1, y1, xmin, xmax, ymin, ymax);
+            bool isDone = judgeAreaCode(areaCode1, areaCode2);
+            if(isDone) {
+                startPoint.setX(x1);
+                startPoint.setY(y1);
+                endPoint.setX(x2);
+                endPoint.setY(y2);
+                return;
+            }
+        }
+
+        if(flag2 == 1) {
+            y2 = ymax;
+            x2 = (-c - b * y2) / a;
+            areaCode2 = getAreaCode(x2, y2, xmin, xmax, ymin, ymax);
+            bool isDone = judgeAreaCode(areaCode1, areaCode2);
+            if(isDone) {
+                startPoint.setX(x1);
+                startPoint.setY(y1);
+                endPoint.setX(x2);
+                endPoint.setY(y2);
+                return;
+            }
+        }
 
     }
     else {
-
+        // algorithm == "Liang-Barsky"
+        int dx = x2 - x1, dy = y2 - y1;
+        double u1 = 0.0, u2 = 1.0;
+        if (ClipT(-dx, x1 - xmin, &u1, &u2)) {
+            if (ClipT(dx, xmax - x1, &u1, &u2)) {
+                if (ClipT(-dy, y1 - ymin, &u1, &u2)) {
+                    if (ClipT(dy, ymax - y1, &u1, &u2)) {
+                        if (u2 < 1.0) {
+                            x2 = (int)((double)x1 + u2 * dx + 0.5);
+                            y2 = (int)((double)y1 + u2 * dy + 0.5);
+                        }
+                        if (u1 > 0.0) {
+                            x1 = (int)((double)x1 + u1 * dx + 0.5);
+                            y1 = (int)((double)y1 + u1 * dy + 0.5);
+                        }
+                        startPoint.setX(x1);
+                        startPoint.setY(y1);
+                        endPoint.setX(x2);
+                        endPoint.setY(y2);
+                    }
+                }
+            }
+        }
     }
 }

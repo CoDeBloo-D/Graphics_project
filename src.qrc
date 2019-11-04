@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/source">
+        <file>source/exit.png</file>
+        <file>source/background.png</file>
+        <file>source/Icon-mouse.png</file>
+        <file>source/Icon-terminal.png</file>
+        <file>source/Icon-brush.png</file>
+    </qresource>
+</RCC>

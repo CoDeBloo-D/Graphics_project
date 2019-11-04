@@ -15,16 +15,17 @@ private:
     QPoint midPoint;
     int drawMethod;
     void set_Pixel(int x, int y, QPen& pen, QPixmap& pix);
+    void set_Pixel(double x, double y, QPen& pen, QPixmap& pix);
 public:
     Line();
     Line(QPoint startPoint,QPoint endPoint);
     ~Line();
     void setDrawMethod(int m);
     void draw(QPen& pen, QPixmap& pix) override;
-    void translate(int dx, int dy);
-    void rotate(int x, int y, int r);
-    void scale(int x, int y, float s);
-    void clip(int x1, int y1, int x2, int y2, std::string algorithm);
+    void translate(int dx, int dy) override;
+    void rotate(int x, int y, int r) override;
+    void scale(int x, int y, float s) override;
+    void clip(QPoint point1, QPoint point2, std::string algorithm) override;
 };
 
 #endif // LINE_H

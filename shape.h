@@ -17,7 +17,11 @@ protected:
 public:
     Shape();
     ~Shape();
-    virtual void draw(QPen& pen, QPixmap& pix);
+    virtual void draw(QPen& pen, QPixmap& pix) = 0;
+    virtual void translate(int dx, int dy) = 0;
+    virtual void rotate(int x, int y, int r) = 0;
+    virtual void scale(int x, int y, float s) = 0;
+    virtual void clip(QPoint point1, QPoint point2, std::string algorithm);
 };
 
 #endif // SHAPE_H

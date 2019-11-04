@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <fstream>
-#define MAX_COMMAND_SEG 10
+#define MAX_COMMAND_SEG 20
 #define MAX_COMMAND_SEG_LEN 20
 using namespace std;
 
