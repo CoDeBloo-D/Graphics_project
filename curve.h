@@ -13,6 +13,7 @@ private:
     QVector<QPoint> points;
     int drawMethod;
     void set_Pixel(double x, double y, QPen& pen, QPixmap& pix);
+    void set_LTRB() override;
 public:
     Curve();
     Curve(QVector<QPoint> v);

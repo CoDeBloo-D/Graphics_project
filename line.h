@@ -12,10 +12,10 @@ class Line : public Shape
 private:
     QPoint startPoint;
     QPoint endPoint;
-    QPoint midPoint;
     int drawMethod;
     void set_Pixel(int x, int y, QPen& pen, QPixmap& pix);
     void set_Pixel(double x, double y, QPen& pen, QPixmap& pix);
+    void set_LTRB() override;
 public:
     Line();
     Line(QPoint startPoint,QPoint endPoint);

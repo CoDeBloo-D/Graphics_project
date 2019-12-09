@@ -1,6 +1,8 @@
 #include "line.h"
 #include <cmath>
 #include <QDebug>
+#include <iostream>
+#include <algorithm>
 
 Line::Line() {
     type = LINE;
@@ -13,12 +15,40 @@ Line::Line(QPoint startPoint, QPoint endPoint) {
     drawMethod = 0;
     this->startPoint = startPoint;
     this->endPoint = endPoint;
-    this->midPoint.setX((startPoint.x() + endPoint.x()) / 2);
-    this->midPoint.setY((startPoint.y() + endPoint.y()) / 2);
+    set_LTRB();
 }
 
 void Line::setDrawMethod(int m) {
     drawMethod = m;
+}
+
+void Line::set_LTRB() {
+    if(startPoint.x() < endPoint.x()) {
+        LTPoint.setX(startPoint.x());
+        RBPoint.setX(endPoint.x());
+    }
+    else if(startPoint.x() > endPoint.x()) {
+        LTPoint.setX(endPoint.x());
+        RBPoint.setX(startPoint.x());
+    }
+    else {
+        LTPoint.setX(startPoint.x());
+        RBPoint.setX(startPoint.x());
+    }
+    if(startPoint.y() < endPoint.y()) {
+        LTPoint.setY(startPoint.y());
+        RBPoint.setY(endPoint.y());
+    }
+    else if(startPoint.y() > endPoint.y()) {
+        LTPoint.setY(endPoint.y());
+        RBPoint.setY(startPoint.y());
+    }
+    else {
+        LTPoint.setY(startPoint.y());
+        RBPoint.setY(startPoint.y());
+    }
+    transformCenter.setX((startPoint.x() + endPoint.x()) / 2);
+    transformCenter.setY((startPoint.y() + endPoint.y()) / 2);
 }
 
 void Line::draw(QPen& pen, QPixmap& pix) {
@@ -182,29 +212,26 @@ Line::~Line() {
     startPoint.setY(0);
     endPoint.setX(0);
     endPoint.setY(0);
-    midPoint.setX(0);
-    midPoint.setY(0);
+    transformCenter.setX(0);
+    transformCenter.setY(0);
 }
 
 void Line::translate(int dx, int dy) {
     startPoint = translate_Point(dx, dy, startPoint);
     endPoint = translate_Point(dx, dy, endPoint);
-    midPoint.setX((startPoint.x() + endPoint.x()) / 2);
-    midPoint.setY((startPoint.y() + endPoint.y()) / 2);
+    set_LTRB();
 }
 
 void Line::rotate(int x, int y, int r) {
     startPoint = rotate_Point(x, y, r, startPoint);
     endPoint = rotate_Point(x, y, r, endPoint);
-    midPoint.setX((startPoint.x() + endPoint.x()) / 2);
-    midPoint.setY((startPoint.y() + endPoint.y()) / 2);
+    set_LTRB();
 }
 
 void Line::scale(int x, int y, float s) {
     startPoint = scale_Point(x, y, s, startPoint);
     endPoint = scale_Point(x, y, s, endPoint);
-    midPoint.setX((startPoint.x() + endPoint.x()) / 2);
-    midPoint.setY((startPoint.y() + endPoint.y()) / 2);
+    set_LTRB();
 }
 
 int getAreaCode(int x, int y, int xmin, int xmax, int ymin, int ymax) {
@@ -232,25 +259,24 @@ bool judgeAreaCode(int areaCode1, int areaCode2) {
 
 bool ClipT(int p, int q, double *u1, double *u2) {
     double r;
-    if (p < 0.0) {
-        r = q / p;
+    if (p < 0) {
+        r = (double)q / p;
         if (r > *u2)
             return false;
         if (r > *u1)
             *u1 = r;
     }
-    else if (p > 0.0) {
-        r = q / p;
+    else if (p > 0) {
+        r = (double)q / p;
         if (r < *u1)
             return false;
         if (r < *u2)
             *u2 = r;
     }
-    else
-        return q >= 0;
+    else if (q < 0)
+        return false;
     return true;
 }
-
 
 void Line::clip(QPoint point1, QPoint point2, std::string algorithm) {
     int xmin, xmax, ymin, ymax;
@@ -282,6 +308,7 @@ void Line::clip(QPoint point1, QPoint point2, std::string algorithm) {
             return;
         if(areaCode1 == 0 && areaCode2 == 0) {
             endPoint = startPoint; //means the line is fully cut
+            set_LTRB();
             return;
         }
 
@@ -299,6 +326,7 @@ void Line::clip(QPoint point1, QPoint point2, std::string algorithm) {
                 startPoint.setY(y1);
                 endPoint.setX(x2);
                 endPoint.setY(y2);
+                set_LTRB();
                 return;
             }
         }
@@ -313,6 +341,7 @@ void Line::clip(QPoint point1, QPoint point2, std::string algorithm) {
                 startPoint.setY(y1);
                 endPoint.setX(x2);
                 endPoint.setY(y2);
+                set_LTRB();
                 return;
             }
         }
@@ -330,6 +359,7 @@ void Line::clip(QPoint point1, QPoint point2, std::string algorithm) {
                 startPoint.setY(y1);
                 endPoint.setX(x2);
                 endPoint.setY(y2);
+                set_LTRB();
                 return;
             }
         }
@@ -344,6 +374,7 @@ void Line::clip(QPoint point1, QPoint point2, std::string algorithm) {
                 startPoint.setY(y1);
                 endPoint.setX(x2);
                 endPoint.setY(y2);
+                set_LTRB();
                 return;
             }
         }
@@ -361,6 +392,7 @@ void Line::clip(QPoint point1, QPoint point2, std::string algorithm) {
                 startPoint.setY(y1);
                 endPoint.setX(x2);
                 endPoint.setY(y2);
+                set_LTRB();
                 return;
             }
         }
@@ -375,6 +407,7 @@ void Line::clip(QPoint point1, QPoint point2, std::string algorithm) {
                 startPoint.setY(y1);
                 endPoint.setX(x2);
                 endPoint.setY(y2);
+                set_LTRB();
                 return;
             }
         }
@@ -392,6 +425,7 @@ void Line::clip(QPoint point1, QPoint point2, std::string algorithm) {
                 startPoint.setY(y1);
                 endPoint.setX(x2);
                 endPoint.setY(y2);
+                set_LTRB();
                 return;
             }
         }
@@ -406,6 +440,7 @@ void Line::clip(QPoint point1, QPoint point2, std::string algorithm) {
                 startPoint.setY(y1);
                 endPoint.setX(x2);
                 endPoint.setY(y2);
+                set_LTRB();
                 return;
             }
         }
@@ -431,9 +466,20 @@ void Line::clip(QPoint point1, QPoint point2, std::string algorithm) {
                         startPoint.setY(y1);
                         endPoint.setX(x2);
                         endPoint.setY(y2);
+                        set_LTRB();
                     }
+                    else
+                        endPoint = startPoint;
                 }
+                else
+                    endPoint = startPoint;
             }
+            else
+                endPoint = startPoint;
         }
+        else
+            endPoint = startPoint;
+        set_LTRB();
     }
+
 }

@@ -9,22 +9,23 @@ Circle::Circle(QPoint center, int radius) {
     type = CIRCLE;
     this->center = center;
     this->radius = radius;
+    transformCenter = center;
+    set_LTRB();
 }
 
 Circle::Circle(QPoint point1, QPoint point2) {
     type = CIRCLE;
-    int delta_x = point1.x() - point2.x();
-    int delta_y = point1.y() - point2.y();
-    this->radius = (abs(delta_x) < abs(delta_y)) ? (abs(delta_x) / 2) : (abs(delta_y) / 2);
-    if(delta_x < 0)
-        this->center.setX(radius + point1.x());
-    else
-        this->center.setX(-radius + point1.x());
+    center = QPoint((point1.x() + point2.x()) / 2, (point1.y() + point2.y()) / 2);
+    int delta_x = point1.x() - point2.x(), delta_y = point1.y() - point2.y();
+    radius = (int)(pow(delta_x * delta_x + delta_y * delta_y, 0.5)) / 2;
+    set_LTRB();
+}
 
-    if(delta_y < 0)
-        this->center.setY(radius + point1.y());
-    else
-        this->center.setY(-radius + point1.y());
+void Circle::set_LTRB() {
+    LTPoint.setX(center.x() - radius - 1);
+    LTPoint.setY(center.y() - radius - 1);
+    RBPoint.setX(center.x() + radius + 1);
+    RBPoint.setY(center.y() + radius + 1);
 }
 
 void Circle::draw(QPen& pen, QPixmap& pix) {
@@ -72,13 +73,19 @@ Circle::~Circle() {
 
 void Circle::translate(int dx, int dy) {
     center = translate_Point(dx, dy, center);
+    transformCenter = center;
+    set_LTRB();
 }
 
 void Circle::rotate(int x, int y, int r) {
     center = rotate_Point(x, y, r, center);
+    transformCenter = center;
+    set_LTRB();
 }
 
 void Circle::scale(int x, int y, float s) {
     center = scale_Point(x, y, s, center);
     radius = radius * s;
+    transformCenter = center;
+    set_LTRB();
 }

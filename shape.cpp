@@ -34,6 +34,32 @@ QPoint Shape::scale_Point(int x, int y, float s, QPoint point) {
     return newPoint;
 }
 
+int Shape::getType() {
+    return type;
+}
+
+QPoint Shape::getCenter() {
+    return transformCenter;
+}
+
+QPoint Shape::getLT() {
+    return LTPoint;
+}
+QPoint Shape::getRB() {
+    return RBPoint;
+}
+
 void Shape::clip(QPoint point1, QPoint point2, std::string algorithm) {
     return;
+}
+
+bool Shape::in_DraggingArea(QPoint cursor) {
+    int xmin = LTPoint.x();
+    int xmax = RBPoint.x();
+    int ymin = LTPoint.y();
+    int ymax = RBPoint.y();
+    if((cursor.x() - xmin) * (cursor.x() - xmax) <= 0 &&
+       (cursor.y() - ymin) * (cursor.y() - ymax) <= 0)
+        return true;
+    return false;
 }

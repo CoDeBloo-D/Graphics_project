@@ -7,6 +7,7 @@
 #include <QImage>
 #include <QPoint>
 #include <QPaintEvent>
+#include <QMouseEvent>
 #include <QFileDialog>
 #include <QMainWindow>
 #include <QRubberBand>
@@ -29,14 +30,13 @@ class Canvas : public QWidget
 public:
     explicit Canvas(QWidget *parent = nullptr);
     ~Canvas() override;
+
 private slots:
     void on_Save_clicked();
     void on_Load_clicked();
     void on_Reset_clicked();
     void on_Color_clicked();
-
     void on_Input_clicked();
-
     void on_Transform_clicked();
 
 private:
@@ -54,6 +54,7 @@ private:
     QPixmap pix;
     QColor inkColor;
     QPen pen;
+    QPoint cursorPoint;
     int penStyle;
     int penWidth;
 private:

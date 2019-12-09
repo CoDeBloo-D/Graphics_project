@@ -16,43 +16,42 @@ Canvas::Canvas(QWidget *parent) : QWidget(parent), ui(new Ui::Canvas) {
     setWindowTitle("New Project");
     setWindowIcon(QIcon(":/source/source/Icon-mouse.png"));
     setStyleSheet("background: rgb(161, 175, 201)");
-
-    ui->Load->setGeometry(1010, 50, 180, 90);
-    ui->Save->setGeometry(1010, 150, 180, 90);
-    ui->Reset->setGeometry(1010, 250, 180, 90);
-    ui->Color->setGeometry(1010, 350, 180, 90);
-    ui->Input->setGeometry(1010, 450, 180, 90);
-    ui->Transform->setGeometry(1010, 550, 180, 90);
+    setMouseTracking(true);
+    ui->Load->setGeometry(1010, 50, 180, 40);
+    ui->Save->setGeometry(1010, 100, 180, 40);
+    ui->Reset->setGeometry(1010, 150, 180, 40);
+    ui->Color->setGeometry(1010, 200, 180, 40);
+    ui->Input->setGeometry(1010, 250, 180, 40);
+    ui->Transform->setGeometry(1010, 300, 180, 40);
     ui->Load->setStyleSheet("border-style:solid; border-width:4px;"
                             "border-color:rgb(255, 255, 255);"
                             "color: black; background: rgb(242, 236, 222);");
-    ui->Load->setFont(QFont("Book Antiqua", 20, QFont::Light));
+    ui->Load->setFont(QFont("Book Antiqua", 16, QFont::Light));
     ui->Save->setStyleSheet("border-style:solid; border-width:4px;"
                             "border-color:rgb(255, 255, 255);"
                             "color: black; background: rgb(242, 236, 222);");
-    ui->Save->setFont(QFont("Book Antiqua", 20, QFont::Light));
+    ui->Save->setFont(QFont("Book Antiqua", 16, QFont::Light));
     ui->Reset->setStyleSheet("border-style:solid; border-width:4px;"
                             "border-color:rgb(255, 255, 255);"
                             "color: black; background: rgb(242, 236, 222);");
-    ui->Reset->setFont(QFont("Book Antiqua", 20, QFont::Light));
+    ui->Reset->setFont(QFont("Book Antiqua", 16, QFont::Light));
     ui->Color->setStyleSheet("border-style:solid; border-width:4px;"
                             "border-color:rgb(255, 255, 255);"
                             "color: black; background: rgb(242, 236, 222);");
-    ui->Color->setFont(QFont("Book Antiqua", 20, QFont::Light));
+    ui->Color->setFont(QFont("Book Antiqua", 16, QFont::Light));
     ui->Input->setStyleSheet("border-style:solid; border-width:4px;"
                             "border-color:rgb(255, 255, 255);"
                             "color: black; background: rgb(242, 236, 222);");
-    ui->Input->setFont(QFont("Book Antiqua", 20, QFont::Light));
+    ui->Input->setFont(QFont("Book Antiqua", 16, QFont::Light));
     ui->Transform->setStyleSheet("border-style:solid; border-width:4px;"
                             "border-color:rgb(255, 255, 255);"
                             "color: black; background: rgb(242, 236, 222);");
-    ui->Transform->setFont(QFont("Book Antiqua", 20, QFont::Light));
-
+    ui->Transform->setFont(QFont("Book Antiqua", 16, QFont::Light));
     pix = QPixmap(500, 500);
     pix.fill(Qt::white);
 
     inkColor.setRgb(0, 0, 0);
-    penWidth = 1;
+    penWidth = 2;
     penStyle = 0;
     init_Pen();
 }
@@ -101,7 +100,7 @@ bool Canvas::save_Canvas() {
     QFileDialog qfd(this);
     qfd.setDefaultSuffix("bmp");
     QString fPath = qfd.getSaveFileName(this, tr("Save File"),
-                    "D:\\MyCanvas.bmp", tr("BMP(*.bmp)"));
+                    "D:\\MyCanvas.png", tr("PNG(*.png)"));
 
     if(!fPath.isEmpty()) {
         QFile file(fPath);
@@ -194,12 +193,11 @@ void Canvas::on_Input_clicked() {
                                     "x2:", 0, 0, pix.width(), 1, nullptr);
         int y2 = QInputDialog::getInt(nullptr, "y2",
                                     "y2:", 0, 0, pix.height(), 1, nullptr);
+        QPoint s(x1, y1), e(x2, y2);
         QStringList algorithmList;
         algorithmList << "DDA" << "Bresenham";
         QString algorithm = QInputDialog::getItem(nullptr, "Algorithm",
                                                   "Please select an algorithm:", algorithmList, 1, true, nullptr);
-        QPoint s(x1, y1);
-        QPoint e(x2, y2);
         Line *newLine = new Line(s, e);
         if(algorithm == "Bresenham")
             newLine->setDrawMethod(1);

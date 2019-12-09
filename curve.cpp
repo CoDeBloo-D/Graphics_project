@@ -12,10 +12,15 @@ Curve::Curve(QVector<QPoint> v) {
     drawMethod = 0;
     for(int i = 0; i < v.size(); i++)
         points.push_back(v[i]);
+    LTPoint = QPoint(0, 0);
+    RBPoint = QPoint(0, 0);
 }
 
 Curve::~Curve() {
     points.clear();
+}
+
+void Curve::set_LTRB() {
 }
 
 void Curve::setDrawMethod(int m) {
@@ -27,6 +32,31 @@ void Curve::set_Pixel(double x, double y, QPen& pen, QPixmap& pix) {
     painter.setPen(pen);
     QPointF p(x, y);
     painter.drawPoint(p);
+
+    int x_lower = (int) x;
+    int x_upper = (int) x + 1;
+    int y_lower = (int) y;
+    int y_upper = (int) y + 1;
+    if(LTPoint != QPoint(0, 0)) {
+        if(x_lower < LTPoint.x())
+            LTPoint.setX(x_lower);
+        if(y_lower < LTPoint.y())
+            LTPoint.setY(y_lower);
+    }
+    else {
+        LTPoint.setX(x_lower);
+        LTPoint.setY(y_lower);
+    }
+    if(RBPoint != QPoint(0, 0)) {
+        if(x_upper > RBPoint.x())
+            RBPoint.setX(x_upper);
+        if(y_upper > RBPoint.y())
+            RBPoint.setY(y_upper);
+    }
+    else {
+        RBPoint.setX(x_upper);
+        RBPoint.setY(y_upper);
+    }
 }
 
 long factorial(long number) {
@@ -111,19 +141,24 @@ void Curve::draw(QPen& pen, QPixmap& pix) {
             }
         }
     }
+    transformCenter.setX((LTPoint.x() + RBPoint.x()) / 2);
+    transformCenter.setY((LTPoint.y() + RBPoint.y()) / 2);
 }
 
 void Curve::translate(int dx, int dy) {
     for(int i = 0; i < points.size(); i++)
         points[i] = translate_Point(dx, dy, points[i]);
+    LTPoint = RBPoint = QPoint(0, 0);
 }
 
 void Curve::rotate(int x, int y, int r) {
     for(int i = 0; i < points.size(); i++)
         points[i] = rotate_Point(x, y, r, points[i]);
+    LTPoint = RBPoint = QPoint(0, 0);
 }
 
 void Curve::scale(int x, int y, float s) {
     for(int i = 0; i < points.size(); i++)
         points[i] = scale_Point(x, y, s, points[i]);
+    LTPoint = RBPoint = QPoint(0, 0);
 }

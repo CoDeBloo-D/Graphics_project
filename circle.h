@@ -13,6 +13,7 @@ private:
     QPoint center;
     int radius;
     void set_Pixel(int x, int y, QPen &pen, QPixmap &Pix);
+    void set_LTRB() override;
 public:
     Circle();
     Circle(QPoint center, int radius);

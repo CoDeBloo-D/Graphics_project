@@ -25,11 +25,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
-    batch.cpp \
     canvas.cpp \
     circle.cpp \
     command.cpp \
+    controlpanel.cpp \
     curve.cpp \
+    drawpad.cpp \
     line.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -39,11 +40,12 @@ SOURCES += \
     shape.cpp
 
 HEADERS += \
-    batch.h \
     canvas.h \
     circle.h \
     command.h \
+    controlpanel.h \
     curve.h \
+    drawpad.h \
     line.h \
     mainwindow.h \
     oval.h \
@@ -52,8 +54,9 @@ HEADERS += \
     shape.h
 
 FORMS += \
-    batch.ui \
     canvas.ui \
+    controlpanel.ui \
+    drawpad.ui \
     mainwindow.ui
 
 # Default rules for deployment.

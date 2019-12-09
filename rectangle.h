@@ -12,9 +12,9 @@ private:
     QPoint point2;
     QPoint point3;
     QPoint point4;
-    QPoint center;
     Line line1,line2,line3,line4;
     int drawMethod;
+    void set_LTRB() override;
 public:
     Rectangle();
     Rectangle(QPoint point1,QPoint point2);

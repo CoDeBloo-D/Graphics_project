@@ -1,9 +1,21 @@
 <RCC>
     <qresource prefix="/source">
         <file>source/exit.png</file>
-        <file>source/background.png</file>
         <file>source/Icon-mouse.png</file>
-        <file>source/Icon-terminal.png</file>
         <file>source/Icon-brush.png</file>
+        <file>source/background.png</file>
+        <file>source/circle.png</file>
+        <file>source/color.png</file>
+        <file>source/curve.png</file>
+        <file>source/line.png</file>
+        <file>source/oval.png</file>
+        <file>source/polygon.png</file>
+        <file>source/rectangle.png</file>
+        <file>source/input.png</file>
+        <file>source/save.png</file>
+        <file>source/resize.png</file>
+        <file>source/drag.png</file>
+        <file>source/reset.png</file>
+        <file>source/pen.png</file>
     </qresource>
 </RCC>

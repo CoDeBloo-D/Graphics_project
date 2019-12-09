@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "controlpanel.h"
 #include "canvas.h"
-#include "batch.h"
 #include <QIcon>
 #include <QPalette>
 #include <QMessageBox>
@@ -17,23 +17,20 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     palette.setBrush(QPalette::Background, QBrush(QPixmap(":/source/source/background.png")));
     setPalette(palette);
 
-    ui->pushButton->setGeometry(90, 165, 150, 150);
-    ui->pushButton_2->setGeometry(410, 165, 150, 150);
+    ui->pushButton->setGeometry(245, 165, 150, 150);
     ui->pushButton_3->setGeometry(600, 0, 40, 40);
 
     ui->pushButton->setStyleSheet("border-style:outset; border-width:4px; border-radius:10px; "
                                   "border-color:rgb(255, 255, 255, 200);"
                                   "color: black; background: rgb(230, 230, 230, 200);");
-    ui->pushButton_2->setStyleSheet("border-style:outset; border-width:4px; border-radius:10px; "
-                                    "border-color:rgb(255, 255, 255, 200);"
-                                    "color: black; background: rgb(230, 230, 230, 200);");
     ui->pushButton->setFont(QFont("Book Antiqua", 16, QFont::Light));
-    ui->pushButton_2->setFont(QFont("Book Antiqua", 16, QFont::Light));
     QIcon icon(":/source/source/exit.png");
     ui->pushButton_3->setIcon(icon);
     ui->pushButton_3->setIconSize(QSize(40, 40));
     ui->pushButton_3->setText("");
     ui->pushButton_3->setStyleSheet("background: transparent; border-width: 0");
+    lastPoint.setX(600);
+    lastPoint.setY(300);
 }
 
 MainWindow::~MainWindow() {
@@ -41,18 +38,33 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::on_pushButton_clicked() {
-    Canvas *c = new Canvas;
-    c->show();
-
-}
-
-void MainWindow::on_pushButton_2_clicked() {
-    Batch *b = new Batch;
-    b->show();
+    //Canvas *c = new Canvas;
+    //c->show();
+    //Drawpad *d = new Drawpad;
+    //d->show();
+    Controlpanel *cp = new Controlpanel;
+    cp->show();
 }
 
 void MainWindow::on_pushButton_3_clicked() {
     QMessageBox message(QMessageBox::Information, "Message", "Terminate drawing program?", QMessageBox::Yes | QMessageBox::No, NULL);
     if(message.exec()==QMessageBox::Yes)
         close();
+}
+
+void MainWindow::mousePressEvent(QMouseEvent *event) {
+    lastPoint = event->globalPos();
+}
+
+void MainWindow::mouseMoveEvent(QMouseEvent *event) {
+    int dx = event->globalX() - lastPoint.x();
+    int dy = event->globalY() - lastPoint.y();
+    lastPoint = event->globalPos();
+    move(x() + dx, y() + dy);
+}
+
+void MainWindow::mouseReleaseEvent(QMouseEvent *event) {
+    int dx = event->globalX() - lastPoint.x();
+    int dy = event->globalY() - lastPoint.y();
+    move(x() + dx, y() + dy);
 }
