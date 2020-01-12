@@ -16,6 +16,7 @@ private:
     int rotateDegrees;
     void set_Pixel(int x, int y, QPen& pen, QPixmap& pix);
     void set_LTRB() override;
+
 public:
     Oval();
     Oval(QPoint point1, QPoint point2);

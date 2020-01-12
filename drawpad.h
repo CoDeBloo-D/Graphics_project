@@ -68,6 +68,7 @@ private:
     void rotate_currentShapeInput();
     void scale_currentShape();
     void cut_Line();
+    bool choose_Shape(QPoint cursor);
 
 protected:
     void paintEvent(QPaintEvent* event);
@@ -76,13 +77,12 @@ protected:
     void mouseReleaseEvent(QMouseEvent* event);
     void contextMenuEvent(QContextMenuEvent* event);
     void wheelEvent(QWheelEvent* event);
+
 signals:
     void postionChange(const QPoint& pos, const QPoint& point, const int& shapeIdx, const int& type);
-    //void unsavedChange(const bool& flag);
     void quitFunctions();
+
 private:
-    //QVector<QPixmap> pixQueue;
-    //int pixIdx;
     QPixmap pix;
     QVector<Shape*> shapeQueue;
     QVector<QPen> shapePen;
@@ -111,7 +111,6 @@ private:
     bool isCuttingLine;
     bool isResizing;
     QString cutAlgorithm;
-    bool choose_Shape(QPoint cursor);
 
 private:
     Ui::Drawpad *ui;

@@ -25,9 +25,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
-    canvas.cpp \
     circle.cpp \
-    command.cpp \
     controlpanel.cpp \
     curve.cpp \
     drawpad.cpp \
@@ -40,9 +38,7 @@ SOURCES += \
     shape.cpp
 
 HEADERS += \
-    canvas.h \
     circle.h \
-    command.h \
     controlpanel.h \
     curve.h \
     drawpad.h \
@@ -54,7 +50,6 @@ HEADERS += \
     shape.h
 
 FORMS += \
-    canvas.ui \
     controlpanel.ui \
     drawpad.ui \
     mainwindow.ui

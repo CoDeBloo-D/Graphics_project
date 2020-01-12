@@ -17,6 +17,7 @@ protected:
     QPoint rotate_Point(int x, int y, int r, QPoint point);
     QPoint scale_Point(int x, int y, float s, QPoint point);
     virtual void set_LTRB() = 0;
+
 public:
     Shape();
     ~Shape();

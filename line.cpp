@@ -57,7 +57,7 @@ void Line::draw(QPen& pen, QPixmap& pix) {
     double deltaX = startPoint.x() - endPoint.x();
     double deltaY = startPoint.y() - endPoint.y();
     double k;
-    if(fabs(deltaX) < 1e-5)
+    if(fabs(deltaX) <= 1e-10)
         k = 100000.0;
     else
         k = deltaY / deltaX;

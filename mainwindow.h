@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QMouseEvent>
+#include "controlpanel.h"
 
 namespace Ui {
 class MainWindow;
@@ -22,6 +23,8 @@ private slots:
 
 private:
     QPoint lastPoint;
+    Controlpanel *cp;
+
 protected:
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);

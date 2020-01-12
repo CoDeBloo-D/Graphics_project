@@ -378,7 +378,8 @@ void Drawpad::set_transformPointInput() {
     transformPoint.setX(x);
     transformPoint.setY(y);
     redraw_Shapes();
-    show_auxiliaryRec(shapeQueue[currentShapeIdx]);
+    if(currentShapeIdx != -1)
+        show_auxiliaryRec(shapeQueue[currentShapeIdx]);
 }
 
 void Drawpad::rotate_currentShape(int degrees) {

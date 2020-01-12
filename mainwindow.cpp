@@ -1,7 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "controlpanel.h"
-#include "canvas.h"
 #include <QIcon>
 #include <QPalette>
 #include <QMessageBox>
@@ -38,12 +37,8 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::on_pushButton_clicked() {
-    //Canvas *c = new Canvas;
-    //c->show();
-    //Drawpad *d = new Drawpad;
-    //d->show();
-    Controlpanel *cp = new Controlpanel;
-    cp->show();
+    cp = new Controlpanel;
+    cp->exec();
 }
 
 void MainWindow::on_pushButton_3_clicked() {

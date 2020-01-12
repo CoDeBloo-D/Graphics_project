@@ -112,7 +112,7 @@ void Curve::draw(QPen& pen, QPixmap& pix) {
     }
     else {
         //B-spline
-        int order = points.size() <= 4 ? points.size() - 1: 4;
+        int order = 3;
         int nKnots = order + points.size();
         double *knots = new double[nKnots];
         for (int i = 0; i < nKnots; i++) {
@@ -123,7 +123,7 @@ void Curve::draw(QPen& pen, QPixmap& pix) {
             else
                 knots[i] = knots[i - 1];
         }
-        double stepT = (knots[nKnots - order] - knots[order-1]) / (1000 - 1);
+        double stepT = (knots[nKnots - order] - knots[order - 1]) / (1000 - 1);
         double t;
         QPointF p;
         for (int i = 0; i < 1000; i++) {
@@ -132,11 +132,11 @@ void Curve::draw(QPen& pen, QPixmap& pix) {
                 set_Pixel(p.x(), p.y(), pen, pix);
             }
             else {
-                t = knots[order-1] + i * stepT;
+                t = knots[order - 1] + i * stepT;
                 int tInt = whichInterval(t, knots, nKnots);
                 if (tInt >= points.size())
                     continue;
-                p= DeBoor(order-1, order, tInt, t, points, knots);
+                p= DeBoor(order - 1, order, tInt, t, points, knots);
                 set_Pixel(p.x(), p.y(), pen, pix);
             }
         }

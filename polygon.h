@@ -15,6 +15,7 @@ private:
     QVector<QPoint> points;
     int drawMethod;
     void set_LTRB() override;
+
 public:
     Polygon();
     Polygon(QVector<QPoint> v);

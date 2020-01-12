@@ -33,7 +33,6 @@ private:
     void input_fromDialog();
     void display_Information(QPoint pos, QPoint point, int shapeIdx, int type);
     void quit_AllFunctions();
-    //void closeEvent(QCloseEvent* event);
 
 private:
     Ui::Controlpanel *ui;
